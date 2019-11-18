@@ -1,57 +1,47 @@
 import React, { Component } from "react";
 
 class Counter extends Component {
-  state = {
-    count: 0,
-    imageUrl: "https://picsum.photos/200",
-    tags: ["tag1", "tag2", "tag3"]
-  };
-
-  badge = {
-    fontSize: 18
-  };
-
-  constructor() {
-    super();
-    this.handleIncrement = this.handleIncrement.bind(this);
-    console.log("Constructor", this);
+  componentDidUpdate(prevProps, prevState) {
+    console.log("prevProps", prevProps);
+    console.log("prevState", prevState);
   }
-
-  handleIncrement = product => {
-    this.setState({ count: this.state.count + 1 });
-    console.log("Increment clicked", this);
-  };
-
+  componentWillUnmount() {
+    console.log("Counter - Unmount");
+  }
   render() {
+    console.log("Counter - Rendered");
     return (
-      <React.Fragment>
-        <img src={this.state.imageUrl}></img>
-        <span style={this.badge} className={this.getBadgeClasses()}>
-          {this.formatCount()}
-        </span>
+      <div>
         <button
-          onClick={() => this.handleIncrement()}
-          className="btn btn-secondary btn-sm"
+          onClick={() => this.props.onIncrement(this.props.counter)}
+          className="btn btn-secondary btn-sm m-2"
         >
-          Increment
+          +
         </button>
-        <ul>
-          {this.state.tags.map(tag => (
-            <li key={tag}>{tag}</li>
-          ))}
-        </ul>
-      </React.Fragment>
+        <button
+          onClick={() => {
+            this.props.onDelete(this.props.counter.id);
+          }}
+          className="btn btn-danger btn-sm m-2"
+        >
+          Delete
+        </button>
+        <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+      </div>
     );
   }
 
   getBadgeClasses() {
-    let notification = this.state.count === 0 ? "warning" : "primary";
+    let notification = this.props.counter.value === 0 ? "warning" : "primary";
     let classes = "badge m-2 badge-" + notification;
     return classes;
   }
 
   formatCount() {
-    const { count } = this.state;
+    const { value: count } = this.props.counter;
+    if (count >= 1 && count <= 9) {
+      return "0" + count;
+    }
     return count === 0 ? "Zero" : count;
   }
 }
