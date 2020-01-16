@@ -18,6 +18,14 @@ class Counter extends Component {
         >
           +
         </button>
+
+        <button
+          onClick={() => this.props.onDecrement(this.props.counter)}
+          className="btn btn-secondary btn-sm m-2"
+        >
+          -
+        </button>
+
         <button
           onClick={() => {
             this.props.onDelete(this.props.counter.id);
@@ -32,13 +40,19 @@ class Counter extends Component {
   }
 
   getBadgeClasses() {
-    let notification = this.props.counter.value === 0 ? "warning" : "primary";
+    let notification =
+      this.props.counter.value <= 0 || this.props.counter.value === "Zero"
+        ? "info"
+        : "primary";
     let classes = "badge m-2 badge-" + notification;
     return classes;
   }
 
   formatCount() {
     const { value: count } = this.props.counter;
+    if (count <= 0) {
+      return "Zero";
+    }
     if (count >= 1 && count <= 9) {
       return "0" + count;
     }
